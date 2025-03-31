@@ -7,7 +7,7 @@ import os
 
 # Set page config
 st.set_page_config(
-    page_title="Eid Mubarak 2024",
+    page_title="Eid Mubarak 2025",
     page_icon="🌙",
     layout="centered",
     initial_sidebar_state="collapsed"
