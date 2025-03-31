@@ -137,10 +137,10 @@ def calculate_countdown(target_date):
 
 # Main app
 def main():
-    st.markdown("<h1 class='eid-title'>🌙 Eid Mubarak 2024 🌟</h1>", unsafe_allow_html=True)
+    st.markdown("<h1 class='eid-title'>🌙 Eid Mubarak 2025 🌟</h1>", unsafe_allow_html=True)
     
     # Set Eid date (update accordingly)
-    eid_date = datetime.datetime(2024, 6, 17, 0, 0)  # Example date
+    eid_date = datetime.datetime(2025, 4, 1, 0, 0)  # Example date
     
     with st.form("user_info"):
         name = st.text_input("Enter Your Name:", placeholder="Your Name")
