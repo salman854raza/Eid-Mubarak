@@ -69,27 +69,33 @@ def set_css():
 
 set_css()
 
-# Background music with stop functionality
+# Update your autoplay_audio function to this version:
 def autoplay_audio(file_path: str, stop_after=10):
-    if os.path.exists(file_path):
+    try:
         with open(file_path, "rb") as f:
             data = f.read()
             b64 = base64.b64encode(data).decode()
             md = f"""
-                <audio id="eidAudio" autoplay>
-                <source src="data:audio/mp3;base64,{b64}" type="audio/mp3">
+                <audio id="eidAudio" autoplay controls style="display:none;">
+                <source src="data:audio/mp3;base64,{b64}" type="audio/mpeg">
+                Your browser does not support the audio element.
                 </audio>
                 <script>
-                    // Stop audio after {stop_after} seconds
-                    setTimeout(() => {{
+                    // Autoplay with user interaction requirement
+                    document.addEventListener('click', function() {{
                         const audio = document.getElementById("eidAudio");
-                        if (audio) audio.pause();
-                    }}, {stop_after * 1000});
+                        if (audio) {{
+                            audio.play().catch(e => console.log("Audio play failed:", e));
+                            setTimeout(() => {{
+                                if (audio) audio.pause();
+                            }}, {stop_after * 1000});
+                        }}
+                    }}, {{once: true}});
                 </script>
                 """
             st.markdown(md, unsafe_allow_html=True)
-    else:
-        st.warning(f"Audio file not found at: {file_path}")
+    except Exception as e:
+        st.error(f"Error loading audio: {str(e)}")
 
 # Eidi image processing
 def create_eidi_image(name, amount, template_path="src/eidi_template.JPG"):
