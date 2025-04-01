@@ -141,9 +141,27 @@ def calculate_countdown(target_date):
     difference = target_date - now
     return difference
 
-# Main app
+def display_moon_phases():
+    phases = ["🌑", "🌒", "🌓", "🌔", "🌕", "🌖", "🌗", "🌘"]
+    st.markdown("""
+    <div class="moon-phases">
+        <div class="moon-phase" style="animation-delay: 0s">🌑</div>
+        <div class="moon-phase" style="animation-delay: 0.5s">🌒</div>
+        <div class="moon-phase" style="animation-delay: 1s">🌓</div>
+        <div class="moon-phase" style="animation-delay: 1.5s">🌔</div>
+        <div class="moon-phase" style="animation-delay: 2s">🌕</div>
+        <div class="moon-phase" style="animation-delay: 2.5s">🌖</div>
+        <div class="moon-phase" style="animation-delay: 3s">🌗</div>
+        <div class="moon-phase" style="animation-delay: 3.5s">🌘</div>
+    </div>
+    """, unsafe_allow_html=True)
+
 def main():
     st.markdown("<h1 class='eid-title'>🌙 Eid Mubarak 2025 🌟</h1>", unsafe_allow_html=True)
+    
+    # Display moon phases animation
+    display_moon_phases()
+
     
     # Set Eid date (update accordingly)
     eid_date = datetime.datetime(2024, 6, 17, 0, 0)  # Example date
