@@ -205,7 +205,7 @@ def main():
         if os.path.exists("src/eidi-image.PNG"):
             st.image("src/eidi-image.PNG", 
                     caption="Traditional Eidi Gift", 
-                    use_container_width=True
+                    use_column_width=True
         
         # Confetti animation
         st.components.v1.html("""
