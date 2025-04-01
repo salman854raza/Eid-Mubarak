@@ -176,7 +176,7 @@ def main():
         
         # Show greeting
         st.balloons()
-        autoplay_audio("src/mp3.WAV", stop_after=10)
+        autoplay_audio("src/mp3.wav", stop_after=10)
         
         # Greeting box with LinkedIn share button
         st.markdown(f"""
