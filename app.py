@@ -169,12 +169,13 @@ def main():
         linkedin = st.text_input("Enter LinkedIn Profile URL:", placeholder="https://linkedin.com/in/yourprofile")
         submitted = st.form_submit_button("Get Your Eidi!")
     
-    # In the main function, update the audio call (line 161 in your code)
-    if submitted:
+    
+     if submitted:
         if not name.strip():
             st.warning("Please enter your name!")
             return
         # Play the celebration music that repeats twice
+        st.balloons()
         autoplay_audio("src/music.mp3", loop_count=2, stop_after=15)
         
         # Start countdown
