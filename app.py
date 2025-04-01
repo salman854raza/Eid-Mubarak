@@ -4,6 +4,7 @@ import datetime
 import time
 import base64
 import os
+import urllib.parse
 
 # Set page config
 st.set_page_config(
@@ -69,20 +70,24 @@ def set_css():
 
 set_css()
 
-# Update your autoplay_audio function to this version:
+# Audio function with improved error handling
 def autoplay_audio(file_path: str, stop_after=10):
     try:
+        if not os.path.exists(file_path):
+            st.error(f"Audio file not found at: {file_path}")
+            return
+            
         with open(file_path, "rb") as f:
             data = f.read()
             b64 = base64.b64encode(data).decode()
             md = f"""
-                <audio id="eidAudio" autoplay controls style="display:none;">
+                <audio id="eidAudio" controls style="display:none;">
                 <source src="data:audio/mp3;base64,{b64}" type="audio/mpeg">
                 Your browser does not support the audio element.
                 </audio>
                 <script>
-                    // Autoplay with user interaction requirement
-                    document.addEventListener('click', function() {{
+                    // Play audio after user interaction
+                    function playAudio() {{
                         const audio = document.getElementById("eidAudio");
                         if (audio) {{
                             audio.play().catch(e => console.log("Audio play failed:", e));
@@ -90,63 +95,57 @@ def autoplay_audio(file_path: str, stop_after=10):
                                 if (audio) audio.pause();
                             }}, {stop_after * 1000});
                         }}
-                    }}, {{once: true}});
+                    }}
+                    // Play when button is clicked
+                    document.addEventListener('click', playAudio, {{once: true}});
                 </script>
                 """
             st.markdown(md, unsafe_allow_html=True)
     except Exception as e:
         st.error(f"Error loading audio: {str(e)}")
 
-# Eidi image processing
-def create_eidi_image(name, amount, template_path="src/eidi_template.jpg"):
+# Eidi image processing with improved font handling
+def create_eidi_image(name, amount, template_path="eidi_template.jpg"):
     try:
         img = Image.open(template_path)
         draw = ImageDraw.Draw(img)
         
-        # Try to load font (with fallback)
+        # Font handling with fallbacks
         try:
-            font = ImageFont.truetype("arial.ttf", 40)
+            font_large = ImageFont.truetype("arial.ttf", 60) or ImageFont.load_default()
+            font_small = ImageFont.truetype("arial.ttf", 40) or ImageFont.load_default()
         except:
-            font = ImageFont.load_default()
-            font.size = 40
+            font_large = ImageFont.load_default()
+            font_small = ImageFont.load_default()
         
         # Draw amount text
         amount_text = f"Rs {amount}"
-        amount_width = draw.textlength(amount_text, font=font)
+        amount_width = draw.textlength(amount_text, font=font_large)
         draw.text(
             (img.width//2 - amount_width//2, img.height//2 + 80), 
             amount_text, 
             fill=(255, 215, 0),  # Gold color
-            font=font
+            font=font_large
         )
         
         # Draw name text
         name_text = f"For {name}"
-        name_width = draw.textlength(name_text, font=font)
+        name_width = draw.textlength(name_text, font=font_small)
         draw.text(
-            (img.width//2 - name_width//2, img.height//2 + 130), 
+            (img.width//2 - name_width//2, img.height//2 + 150), 
             name_text, 
             fill=(255, 255, 255),  # White color
-            font=font
+            font=font_small
         )
         
         return img
-    except FileNotFoundError:
-        st.error("Eidi template image not found!")
+    except Exception as e:
+        st.error(f"Error creating Eidi image: {str(e)}")
         return None
 
-# Countdown timer
-def calculate_countdown(target_date):
-    now = datetime.datetime.now()
-    difference = target_date - now
-    return difference
-
-# Main app
+# Main app function
 def main():
     st.markdown("<h1 class='eid-title'>🌙 Eid Mubarak 2025 🌟</h1>", unsafe_allow_html=True)
-    
-    # Set Eid date (update accordingly)
-    eid_date = datetime.datetime(2024, 6, 17, 0, 0)  # Example date
     
     with st.form("user_info"):
         name = st.text_input("Enter Your Name:", placeholder="Your Name")
@@ -158,34 +157,17 @@ def main():
             st.warning("Please enter your name!")
             return
         
-        # Start countdown
-        countdown_placeholder = st.empty()
-        
-        while datetime.datetime.now() < eid_date:
-            time_left = calculate_countdown(eid_date)
-            countdown_text = f"""
-            <div class="countdown">
-                Time until Eid: {time_left.days} days, {time_left.seconds//3600} hours, 
-                {(time_left.seconds//60)%60} minutes, {time_left.seconds%60} seconds
-            </div>
-            """
-            countdown_placeholder.markdown(countdown_text, unsafe_allow_html=True)
-            time.sleep(1)
-        
-        countdown_placeholder.empty()
-        
-        # Show greeting
+        # Show greeting immediately
         st.balloons()
-        autoplay_audio("src/mp3.wav", stop_after=10)
+        autoplay_audio("mp3.wav", stop_after=10)
         
         # Greeting box with LinkedIn share button
+        share_url = f"https://www.linkedin.com/sharing/share-offsite/?url={urllib.parse.quote(linkedin)}"
         st.markdown(f"""
         <div class="greeting-box">
             <h2>Eid Mubarak, {name}! 🎉</h2>
             <p>May Allah bless you with happiness, peace, and prosperity!</p>
-            <a href="https://www.linkedin.com/sharing/share-offsite/?url={linkedin}" 
-               target="_blank" 
-               class="share-button">
+            <a href="{share_url}" target="_blank" class="share-button">
                Share on LinkedIn
             </a>
         </div>
@@ -194,18 +176,18 @@ def main():
         # Display Eidi image with personalized message
         st.markdown("<h3 style='text-align: center;'>Your Eidi Gift</h3>", unsafe_allow_html=True)
         
-        # Personalized Eidi image
+        # Personalized Eidi image (updated to use_container_width)
         eidi_img = create_eidi_image(name, 5000)
         if eidi_img:
             st.image(eidi_img, 
-                    caption=f"Rs 5000 is for you, {name}!", 
-                    use_column_width=True)
+                    caption=f"Rs 5000 is for you, {name}!",
+                    use_container_width=True)  # Updated parameter
         
-        # Standard Eidi image
-        if os.path.exists("src/eidi-image.PNG"):
-            st.image("src/eidi-image.PNG", 
-                    caption="Traditional Eidi Gift", 
-                    use_column_width=True)
+        # Standard Eidi image (updated to use_container_width)
+        if os.path.exists("eidi-image.png"):
+            st.image("eidi-image.png", 
+                    caption="Traditional Eidi Gift",
+                    use_container_width=True)  # Updated parameter
         
         # Confetti animation
         st.components.v1.html("""
@@ -221,7 +203,7 @@ def main():
         }
         
         // Initial burst
-        fireConfetti();
+        setTimeout(fireConfetti, 500);
         
         // Continue every 3 seconds
         setInterval(fireConfetti, 3000);
