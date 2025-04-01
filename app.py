@@ -199,7 +199,7 @@ def main():
         if eidi_img:
             st.image(eidi_img, 
                     caption=f"Rs 5000 is for you, {name}!", 
-                    use_container_width=True
+                    use_column_width=True
         
         # Standard Eidi image
         if os.path.exists("src/eidi-image.PNG"):
