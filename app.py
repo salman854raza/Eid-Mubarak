@@ -157,6 +157,11 @@ def main():
         if not name.strip():
             st.warning("Please enter your name!")
             return
+        # Play the celebration music that repeats twice
+        autoplay_audio("music.mp3", loop_count=2, stop_after=15)
+        
+        # Show greeting
+        st.balloons()
         
         # Start countdown
         countdown_placeholder = st.empty()
