@@ -281,7 +281,7 @@ def main():
     display_moon_phases()
     
     # Set Eid date (update accordingly)
-    eid_date = datetime.datetime(2025, 4, 2, 0, 0)  # Updated for 2025
+    eid_date = datetime.datetime(2024, 6, 17, 0, 0)  # Updated for 2025
     
     with st.form("user_info"):
         name = st.text_input("Enter Your Name:", placeholder="Your Name")
