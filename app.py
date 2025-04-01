@@ -69,34 +69,50 @@ def set_css():
 
 set_css()
 
-# Update your autoplay_audio function to this version:
-def autoplay_audio(file_path: str, stop_after=10):
+Copy
+# Update the autoplay_audio function parameters and logic
+def autoplay_audio(file_path: str, loop_count=1, stop_after=10):  # Add loop_count parameter
     try:
         with open(file_path, "rb") as f:
             data = f.read()
             b64 = base64.b64encode(data).decode()
             md = f"""
-                <audio id="eidAudio" autoplay controls style="display:none;">
+                <audio id="eidAudio" controls style="display:none;">
                 <source src="data:audio/mp3;base64,{b64}" type="audio/mpeg">
                 Your browser does not support the audio element.
                 </audio>
                 <script>
-                    // Autoplay with user interaction requirement
-                    document.addEventListener('click', function() {{
-                        const audio = document.getElementById("eidAudio");
-                        if (audio) {{
-                            audio.play().catch(e => console.log("Audio play failed:", e));
-                            setTimeout(() => {{
-                                if (audio) audio.pause();
-                            }}, {stop_after * 1000});
+                    let playCount = 0;
+                    const maxPlays = {loop_count};
+                    const audio = document.getElementById("eidAudio");
+                    
+                    function playAudio() {{
+                        if (playCount < maxPlays) {{
+                            audio.currentTime = 0;
+                            audio.play()
+                                .then(() => {{
+                                    playCount++;
+                                    setTimeout(() => {{
+                                        if (playCount < maxPlays) {{
+                                            playAudio();
+                                        }} else {{
+                                            audio.pause();
+                                        }}
+                                    }}, {stop_after * 1000});
+                                }})
+                                .catch(e => console.log("Audio play failed:", e));
                         }}
+                    }}
+                    
+                    // Play when button is clicked
+                    document.addEventListener('click', function() {{
+                        playAudio();
                     }}, {{once: true}});
                 </script>
                 """
             st.markdown(md, unsafe_allow_html=True)
     except Exception as e:
         st.error(f"Error loading audio: {str(e)}")
-
 # Eidi image processing
 def create_eidi_image(name, amount, template_path="src/eidi_template.jpg"):
     try:
@@ -153,12 +169,13 @@ def main():
         linkedin = st.text_input("Enter LinkedIn Profile URL:", placeholder="https://linkedin.com/in/yourprofile")
         submitted = st.form_submit_button("Get Your Eidi!")
     
-    if submitted:
-        if not name.strip():
-            st.warning("Please enter your name!")
-            return
-        # Play the celebration music that repeats twice
-        autoplay_audio("src/music.mp3", loop_count=2, stop_after=15)
+    # In the main function, update the audio call (line 161 in your code)
+if submitted:
+    if not name.strip():
+        st.warning("Please enter your name!")
+        return
+    # Play the celebration music that repeats twice
+    autoplay_audio("src/music.mp3", loop_count=2, stop_after=15)  # Add this line
         
         # Show greeting
         st.balloons()
