@@ -14,6 +14,7 @@ st.set_page_config(
 )
 
 # Custom CSS for animations and styling
+# Custom CSS for animations and styling
 def set_css():
     st.markdown("""
     <style>
@@ -23,11 +24,26 @@ def set_css():
         100% { transform: translateY(0px); }
     }
     
+    @keyframes pulse {
+        0% { transform: scale(1); }
+        50% { transform: scale(1.05); }
+        100% { transform: scale(1); }
+    }
+    
+    @keyframes colorChange {
+        0% { color: #2ecc71; }
+        25% { color: #f1c40f; }
+        50% { color: #e74c3c; }
+        75% { color: #3498db; }
+        100% { color: #9b59b6; }
+    }
+    
     .eid-title {
-        color: #2ecc71;
         text-align: center;
-        animation: float 3s ease-in-out infinite;
-        font-size: 3em !important;
+        animation: float 3s ease-in-out infinite, colorChange 10s infinite;
+        font-size: 3.5em !important;
+        margin-bottom: 0.5em;
+        text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
     }
     
     .greeting-box {
@@ -35,8 +51,9 @@ def set_css():
         padding: 2rem;
         border-radius: 15px;
         margin: 2rem 0;
-        box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        box-shadow: 0 8px 20px rgba(0,0,0,0.2);
         text-align: center;
+        animation: pulse 2s infinite;
     }
     
     .countdown {
@@ -44,6 +61,8 @@ def set_css():
         color: #e74c3c;
         text-align: center;
         margin: 1rem 0;
+        font-weight: bold;
+        text-shadow: 1px 1px 2px rgba(0,0,0,0.2);
     }
     
     .eidi-image {
@@ -52,22 +71,65 @@ def set_css():
         animation: float 4s ease-in-out infinite;
         margin: 0 auto;
         display: block;
+        transition: transform 0.3s;
+    }
+    
+    .eidi-image:hover {
+        transform: scale(1.03);
     }
     
     .share-button {
         background-color: #0077b5 !important;
         color: white !important;
-        border-radius: 5px;
-        padding: 10px 15px;
+        border-radius: 25px;
+        padding: 12px 25px;
         text-decoration: none;
         display: inline-block;
         margin-top: 15px;
         font-weight: bold;
+        box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        transition: all 0.3s;
+    }
+    
+    .share-button:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 12px rgba(0,0,0,0.3);
+    }
+    
+    .stTextInput input {
+        border-radius: 10px !important;
+        padding: 12px !important;
+    }
+    
+    .stButton>button {
+        border-radius: 10px !important;
+        padding: 10px 24px !important;
+        background: linear-gradient(45deg, #2ecc71, #3498db) !important;
+        color: white !important;
+        border: none !important;
+        font-weight: bold !important;
+    }
+    
+    .stButton>button:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 8px rgba(0,0,0,0.2) !important;
+    }
+    
+    .moon-phases {
+        display: flex;
+        justify-content: space-around;
+        margin: 2rem 0;
+    }
+    
+    .moon-phase {
+        font-size: 2rem;
+        animation: float 5s ease-in-out infinite;
     }
     </style>
     """, unsafe_allow_html=True)
 
 set_css()
+
 
 # Update your autoplay_audio function to this version:
 def autoplay_audio(file_path: str, stop_after=10):
