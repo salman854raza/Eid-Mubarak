@@ -199,13 +199,13 @@ def main():
         if eidi_img:
             st.image(eidi_img, 
                     caption=f"Rs 5000 is for you, {name}!", 
-                    use_column_width=True
+                    use_container_width=True)
         
         # Standard Eidi image
         if os.path.exists("src/eidi-image.PNG"):
             st.image("src/eidi-image.PNG", 
                     caption="Traditional Eidi Gift", 
-                    use_column_width=True
+                    use_container_width=True)
         
         # Confetti animation
         st.components.v1.html("""
