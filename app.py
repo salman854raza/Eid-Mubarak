@@ -98,7 +98,7 @@ def autoplay_audio(file_path: str, stop_after=10):
         st.error(f"Error loading audio: {str(e)}")
 
 # Eidi image processing
-def create_eidi_image(name, amount, template_path="src/eidi_template.JPG"):
+def create_eidi_image(name, amount, template_path="src/eidi_template.jpg"):
     try:
         img = Image.open(template_path)
         draw = ImageDraw.Draw(img)
