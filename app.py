@@ -152,6 +152,11 @@ def main():
         name = st.text_input("Enter Your Name:", placeholder="Your Name")
         linkedin = st.text_input("Enter LinkedIn Profile URL:", placeholder="https://linkedin.com/in/yourprofile")
         submitted = st.form_submit_button("Get Your Eidi!")
+        
+    if submitted and name and linkedin:
+        # Show greeting immediately
+        st.balloons()
+        autoplay_audio("src/music.mp3", stop_after=10)
     
     if submitted:
         if not name.strip():
